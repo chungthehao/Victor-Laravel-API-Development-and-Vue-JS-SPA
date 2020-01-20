@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Contact;
+use Carbon\Carbon;
 
 class ContactsTest extends TestCase
 {
@@ -31,7 +32,7 @@ class ContactsTest extends TestCase
         // Những thông tin trg db phải khớp những gì đã lưu
         $this->assertEquals('Len Chay Hu', $contact->name);
         $this->assertEquals('hu@1.com', $contact->email);
-        $this->assertEquals('08/17/1992', $contact->birthday);
+        $this->assertEquals(Carbon::parse('08/17/1992'), $contact->birthday);
         $this->assertEquals('ABC Company', $contact->company);
     }
 
@@ -56,6 +57,46 @@ class ContactsTest extends TestCase
                 // Và khi validation fail, không có record nào đc insert
                 $this->assertCount(0, Contact::all());
             });
+    }
+
+    /** @test */
+    public function email_must_be_a_valid_email()
+    {
+        $response = $this->post(
+            '/api/contacts', 
+            array_merge(
+                $this->data(),
+                ['email' => 'NOT AN EMAIL']
+            )
+        );
+
+        $contact = Contact::first();
+
+        // Khi insert ko đúng định dạng email, phải báo lỗi validation
+        $response->assertSessionHasErrors('email');
+
+        // Và khi validation fail, không có record nào đc insert
+        $this->assertCount(0, Contact::all());
+    }
+
+    /** @test */
+    public function birthdays_are_properly_stored()
+    {
+        $this->withoutExceptionHandling();
+
+        $response = $this->post(
+            '/api/contacts', 
+            array_merge(
+                $this->data(),
+                // ['birthday' => 'August 17, 1992'] // even another format
+            )
+        );
+
+        $this->assertCount(1, Contact::all());
+
+        $this->assertInstanceOf(Carbon::class, Contact::first()->birthday);
+
+        $this->assertEquals('08-17-1992', Contact::first()->birthday->format('m-d-Y'));
     }
 
 }
