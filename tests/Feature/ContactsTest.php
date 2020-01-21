@@ -114,4 +114,20 @@ class ContactsTest extends TestCase
         ]);
     }
 
+    /** @test */
+    public function a_contact_can_be_patched()
+    {
+        $contact = factory(Contact::class)->create();
+
+        $response = $this->patch('/api/contacts/' . $contact->id, $this->data());
+
+        $contact = $contact->fresh();
+
+        // Những thông tin trg db phải khớp những gì đã lưu
+        $this->assertEquals('Len Chay Hu', $contact->name);
+        $this->assertEquals('hu@1.com', $contact->email);
+        $this->assertEquals(Carbon::parse('08/17/1992'), $contact->birthday);
+        $this->assertEquals('ABC Company', $contact->company);
+    }
+
 }
