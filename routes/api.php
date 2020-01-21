@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/contacts/{contact}', 'ContactsController@show');
 Route::post('/contacts', 'ContactsController@store');
 Route::patch('/contacts/{contact}', 'ContactsController@update');
+Route::delete('/contacts/{contact}', 'ContactsController@destroy');
