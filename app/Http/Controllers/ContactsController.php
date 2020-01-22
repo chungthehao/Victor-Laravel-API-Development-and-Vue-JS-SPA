@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Contact;
+use App\Http\Resources\ContactResource;
 
 class ContactsController extends Controller
 {
@@ -22,7 +23,7 @@ class ContactsController extends Controller
     public function index()
     {
         $this->authorize('viewAny', Contact::class); // Contact::class, vậy nó mới biết đang dùng policy của model nào
-        return auth('api')->user()->contacts;
+        return ContactResource::collection(auth('api')->user()->contacts);
     }
 
     public function store()
@@ -34,7 +35,7 @@ class ContactsController extends Controller
     public function show(Contact $contact)
     {
         $this->authorize('view', $contact);
-        return $contact;
+        return new ContactResource($contact);
     }
 
     public function update(Contact $contact)
