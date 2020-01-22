@@ -21,37 +21,32 @@ class ContactsController extends Controller
 
     public function index()
     {
-        // return Contact::all();
+        $this->authorize('viewAny', Contact::class); // Contact::class, vậy nó mới biết đang dùng policy của model nào
         return auth('api')->user()->contacts;
     }
 
     public function store()
     {
+        $this->authorize('create', Contact::class); // Contact::class, vậy nó mới biết đang dùng policy của model nào
         auth('api')->user()->contacts()->create($this->validateData());
     }
 
     public function show(Contact $contact)
     {
-        if (request()->user()->isNot($contact->user)) {
-            return response()->json([], 403);
-        }
+        $this->authorize('view', $contact);
         return $contact;
     }
 
     public function update(Contact $contact)
     {
-        if (request()->user()->isNot($contact->user)) {
-            return response()->json([], 403);
-        }
+        $this->authorize('update', $contact);
         $contact->update($this->validateData());
         return $contact;
     }
 
     public function destroy(Contact $contact)
     {
-        if (request()->user()->isNot($contact->user)) {
-            return response()->json([], 403);
-        }
+        $this->authorize('delete', $contact);
         $contact->delete();
     }
 }
