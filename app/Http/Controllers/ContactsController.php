@@ -15,6 +15,7 @@ class ContactsController extends Controller
             'email' => 'required|email',
             'birthday' => 'required',
             'company' => 'required',
+            // 'user_id' => 'required'
         ]);
     }
 
@@ -26,22 +27,31 @@ class ContactsController extends Controller
 
     public function store()
     {
-        Contact::create($this->validateData());
+        auth('api')->user()->contacts()->create($this->validateData());
     }
 
     public function show(Contact $contact)
     {
+        if (request()->user()->isNot($contact->user)) {
+            return response()->json([], 403);
+        }
         return $contact;
     }
 
     public function update(Contact $contact)
     {
+        if (request()->user()->isNot($contact->user)) {
+            return response()->json([], 403);
+        }
         $contact->update($this->validateData());
         return $contact;
     }
 
     public function destroy(Contact $contact)
     {
+        if (request()->user()->isNot($contact->user)) {
+            return response()->json([], 403);
+        }
         $contact->delete();
     }
 }
