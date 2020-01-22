@@ -18,6 +18,12 @@ class ContactsController extends Controller
         ]);
     }
 
+    public function index()
+    {
+        // return Contact::all();
+        return auth('api')->user()->contacts;
+    }
+
     public function store()
     {
         Contact::create($this->validateData());
