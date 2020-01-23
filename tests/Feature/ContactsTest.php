@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Contact;
 use App\User;
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\Response;
 
 class ContactsTest extends TestCase
 {
@@ -70,9 +71,7 @@ class ContactsTest extends TestCase
     /** @test */
     public function an_authenticated_user_can_add_a_contact()
     {
-        $user = factory(User::class)->create();
-        
-        $this->post('/api/contacts', $this->data());
+        $response = $this->post('/api/contacts', $this->data()); // dd(json_decode($response->getContent()));
 
         $contact = Contact::first();
 
@@ -81,6 +80,12 @@ class ContactsTest extends TestCase
         $this->assertEquals('hu@1.com', $contact->email);
         $this->assertEquals(Carbon::parse('08/17/1992'), $contact->birthday);
         $this->assertEquals('ABC Company', $contact->company);
+
+        $response->assertStatus(Response::HTTP_CREATED);
+        $response->assertJson([
+            'data' => ['contact_id' => $contact->id],
+            'links' => ['self' => url('/contacts/' . $contact->id)]
+        ]);
     }
 
     /** @test */

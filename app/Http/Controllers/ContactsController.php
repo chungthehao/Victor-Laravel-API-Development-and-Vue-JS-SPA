@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Contact;
 use App\Http\Resources\ContactResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class ContactsController extends Controller
 {
@@ -29,7 +30,8 @@ class ContactsController extends Controller
     public function store()
     {
         $this->authorize('create', Contact::class); // Contact::class, vậy nó mới biết đang dùng policy của model nào
-        auth('api')->user()->contacts()->create($this->validateData());
+        $newContact = auth('api')->user()->contacts()->create($this->validateData());
+        return (new ContactResource($newContact))->response()->setStatusCode(Response::HTTP_CREATED);
     }
 
     public function show(Contact $contact)
