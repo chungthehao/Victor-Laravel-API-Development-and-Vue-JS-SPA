@@ -48,7 +48,10 @@ class ContactsTest extends TestCase
         // dd(json_decode($response->getContent()));
         $response->assertJsonCount(1)->assertJson([
             'data' => [
-                ['contact_id' => $contact->id]
+                [
+                    'data' => ['contact_id' => $contact->id],
+                    'links' => ['self' => $contact->path()]
+                ],
             ]
         ]); // List -> 1 mảng các obj
     }
@@ -84,7 +87,7 @@ class ContactsTest extends TestCase
         $response->assertStatus(Response::HTTP_CREATED);
         $response->assertJson([
             'data' => ['contact_id' => $contact->id],
-            'links' => ['self' => url('/contacts/' . $contact->id)]
+            'links' => ['self' => $contact->path()]
         ]);
     }
 
@@ -202,6 +205,16 @@ class ContactsTest extends TestCase
         $this->assertEquals('hu@1.com', $contact->email);
         $this->assertEquals(Carbon::parse('08/17/1992'), $contact->birthday);
         $this->assertEquals('ABC Company', $contact->company);
+
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJson([
+            'data' => [
+                'contact_id' => $contact->id
+            ],
+            'links' => [
+                'self' => $contact->path()
+            ],
+        ]);
     }
 
     /** @test */
@@ -233,6 +246,8 @@ class ContactsTest extends TestCase
         $response = $this->delete('/api/contacts/' . $contact->id. '?api_token=' . $this->user->api_token);
 
         $this->assertCount(0, Contact::all());
+
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     /** @test */

@@ -44,12 +44,13 @@ class ContactsController extends Controller
     {
         $this->authorize('update', $contact);
         $contact->update($this->validateData());
-        return $contact;
+        return (new ContactResource($contact))->response()->setStatusCode(Response::HTTP_OK);
     }
 
     public function destroy(Contact $contact)
     {
         $this->authorize('delete', $contact);
         $contact->delete();
+        return response()->json([], Response::HTTP_NO_CONTENT);
     }
 }
