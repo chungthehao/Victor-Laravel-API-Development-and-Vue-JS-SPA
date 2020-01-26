@@ -18,22 +18,21 @@
             <div class="relative">
                 <label for="email" class="text-xs font-bold text-blue-500 uppercase absolute pl-3 pt-2">E-mail</label>
 
-                <div class="">
+                <div>
                     <input id="email"
                            type="email"
                            class="w-full rounded p-3 pt-8 bg-blue-800 text-gray-100 outline-none focus:bg-blue-700"
                            name="email"
                            value="{{ old('email') }}"
-                           required
                            autocomplete="email"
                            autofocus
                            placeholder="your@email.com"
                     >
 
                     @error('email')
-                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                        <span class="text-red-600 text-sm" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
                     @enderror
                 </div>
             </div>
@@ -41,53 +40,49 @@
             <div class="relative pt-3">
                 <label for="password" class="text-xs font-bold text-blue-500 uppercase absolute pl-3 pt-2">Password</label>
 
-                <div class="">
+                <div>
                     <input id="password"
                            type="password"
                            class="w-full rounded p-3 pt-8 bg-blue-800 text-gray-100 outline-none focus:bg-blue-700"
                            name="password"
-                           required
                            autocomplete="current-password"
                            placeholder="your password"
                     >
 
                     @error('password')
-                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                        <span class="text-red-600 text-sm" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
                     @enderror
                 </div>
             </div>
 
             <div class="pt-2">
-                <div class="">
-                    <div class="form-check">
-                        <input class="form-check-input"
-                               type="checkbox"
-                               name="remember"
-                               id="remember"
-                                {{ old('remember') ? 'checked' : '' }}
-                        >
+                <input type="checkbox"
+                       name="remember"
+                       id="remember"
+                        {{ old('remember') ? 'checked' : '' }}
+                >
 
-                        <label class="text-white" for="remember">
-                            {{ __('Remember Me') }}
-                        </label>
-                    </div>
-                </div>
+                <label class="text-white" for="remember">{{ __('Remember Me') }}</label>
             </div>
 
-            <div class="form-group row mb-0">
-                <div class="col-md-8 offset-md-4">
-                    <button type="submit" class="btn btn-primary">
-                        {{ __('Login') }}
-                    </button>
+            <div class="pt-8">
+                <button type="submit"
+                        class="uppercase rounded text-blue-800 font-bold bg-gray-400 w-full py-2 px-3"
+                >
+                    Login
+                </button>
+            </div>
 
-                    @if (Route::has('password.request'))
-                        <a class="btn btn-link" href="{{ route('password.request') }}">
-                            {{ __('Forgot Your Password?') }}
-                        </a>
-                    @endif
-                </div>
+            <div class="flex justify-between pt-8 text-white text-sm font-bold">
+                <a href="{{ route('password.request') }}">
+                    Forgot Your Password?
+                </a>
+
+                <a href="{{ route('register') }}">
+                    Register
+                </a>
             </div>
         </form>
     </div>
