@@ -1,6 +1,7 @@
 <template>
     <div class="bg-white h-screen">
         <div class="flex">
+            <!-- LEFT -->
             <div class="pl-6 bg-gray-200 w-48 h-screen border-r-2 border-gray-400">
                 <nav class="pt-4">
                     <router-link to="/">
@@ -40,14 +41,25 @@
                     </router-link>
                 </nav>
             </div>
+            <!-- END LEFT -->
 
-            <div>
-                <div></div>
+            <!-- RIGHT -->
+            <div class="flex-1 h-screen overflow-y-hidden flex flex-col">
+                <div class="h-16 px-6 border-b border-gray-400 flex justify-between items-center">
+                    <div>
+                        Contacts
+                    </div>
 
-                <div>
-                    <router-view></router-view>
+                    <div class="rounded-full bg-blue-400 text-white w-10 h-10 flex justify-center items-center border border-gray-400">
+                        VG
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-hidden flex flex-col">
+                    <router-view class="overflow-x-hidden p-6"></router-view>
                 </div>
             </div>
+            <!-- END RIGHT -->
         </div>
     </div>
 </template>
